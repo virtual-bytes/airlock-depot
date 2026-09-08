@@ -42,10 +42,13 @@ Since 2.0.0 the appliance gained:
   `operator` accounts from Settings. Operators can do everything except
   account management, appliance updates and the classification banner, and
   they list and revoke only the API tokens they created.
-- **Classification banner by role.** The marking band is set once by an
-  administrator. A connected (Internet-facing) depot offers *None* and
-  *UNCLASSIFIED* only; the dark-site deployment offers the full marking
-  table (UNCLASSIFIED, SECRET, TOP SECRET, TOP SECRET//SAP).
+- **Classification banner by role.** Until an administrator selects the
+  network once, every screen (including sign-in) shows a grey
+  **SAMPLE — CLASSIFICATION NOT SET** band; it is a placeholder, not a
+  marking, and disappears once the level is set. A connected
+  (Internet-facing) depot offers *None* and *UNCLASSIFIED* only; the
+  dark-site deployment offers the full marking table (UNCLASSIFIED, SECRET,
+  TOP SECRET, TOP SECRET//SAP). Only administrators can set or change it.
 - **SSH maintenance window** opened from the GUI as an audited action and
   closed again on time; SSH stays key-only.
 - **Resilience.** `/data` is mounted by UUID with `nofail`, so a detached or
