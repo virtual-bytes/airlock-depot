@@ -27,6 +27,38 @@ Each OVA ships with `.sha256` and `.sha512` files attached to the release:
 sha256sum -c airlock-depot-<version>.ova.sha256
 ```
 
+## What's new in 2.0.4
+
+Since 2.0.0 the appliance gained:
+
+- **In-place service patching.** Settings → Appliance updates takes a signed
+  service patch, verifies it against the key built into the appliance,
+  snapshots what it replaces, installs atomically, restarts the API and
+  health-checks it, rolling back on its own if the new version does not come
+  up. Roll back is one button; every step is audited. The depot on `/data`,
+  the database, configuration and TLS material are never touched. Photon OS
+  packages are not covered; those arrive with a new OVA.
+- **GUI accounts.** Administrators add, remove and reset `admin` or
+  `operator` accounts from Settings. Operators can do everything except
+  account management, appliance updates and the classification banner, and
+  they list and revoke only the API tokens they created.
+- **Classification banner by role.** The marking band is set once by an
+  administrator. A connected (Internet-facing) depot offers *None* and
+  *UNCLASSIFIED* only; the dark-site deployment offers the full marking
+  table (UNCLASSIFIED, SECRET, TOP SECRET, TOP SECRET//SAP).
+- **SSH maintenance window** opened from the GUI as an audited action and
+  closed again on time; SSH stays key-only.
+- **Resilience.** `/data` is mounted by UUID with `nofail`, so a detached or
+  re-enumerated data disk no longer stops the next boot in emergency mode.
+- **Exports** show the on-disk package directory, and the build result stays
+  on screen after a build.
+- **Build transparency.** The image build produces an SBOM of the sealed
+  image (Photon packages plus the API's Go modules) and scans it; the API is
+  built with a current Go toolchain.
+
+Appliances deployed from an earlier OVA keep working; redeploy from the
+2.0.4 OVA to get the patching mechanism.
+
 ## Deploying
 
 Deploy the OVA in vCenter, choose the deployment configuration (role), and
