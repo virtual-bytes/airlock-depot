@@ -29,16 +29,6 @@ sha256sum -c airlock-depot-<version>.ova.sha256
 
 ## What's new in 2.0.6
 
-- **Component-scoped sync jobs no longer fail on component names the tool
-  cannot filter by.** The depot's catalog lists more component names than the
-  VCF Download Tool accepts for `--component`. The appliance now reads the
-  accepted list from the tool itself, skips the rest before running anything,
-  reports what it skipped in the job log and result, and greys those
-  components out in the Run sync dialog. A job with no component selection
-  still downloads everything in scope.
-
-## What's new in 2.0.5
-
 - **Catalog versus disk.** The Catalog page shows *Advertised but not synced*:
   every version the depot's product catalog lists whose files are not on
   disk, with the missing file names. The Consumers page lists the paths each
@@ -51,6 +41,13 @@ sha256sum -c airlock-depot-<version>.ova.sha256
   whose files are all on disk, re-applied after every sync, so consumers only
   ever see what the depot can deliver. Turning it off restores the upstream
   catalog exactly.
+- **Component-scoped sync jobs no longer fail on component names the tool
+  cannot filter by.** The depot's catalog lists more component names than the
+  VCF Download Tool accepts for `--component`. The appliance now reads the
+  accepted list from the tool itself, skips the rest before running anything,
+  reports what it skipped in the job log and result, and greys those
+  components out in the Run sync dialog. A job with no component selection
+  still downloads everything in scope.
 - **SAMPLE** is a selectable classification level on every role; it renders as
   the grey placeholder band and can never pass for a marking.
 
