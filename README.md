@@ -27,6 +27,16 @@ Each OVA ships with `.sha256` and `.sha512` files attached to the release:
 sha256sum -c airlock-depot-<version>.ova.sha256
 ```
 
+## What's new in 2.0.6
+
+- **Component-scoped sync jobs no longer fail on component names the tool
+  cannot filter by.** The depot's catalog lists more component names than the
+  VCF Download Tool accepts for `--component`. The appliance now reads the
+  accepted list from the tool itself, skips the rest before running anything,
+  reports what it skipped in the job log and result, and greys those
+  components out in the Run sync dialog. A job with no component selection
+  still downloads everything in scope.
+
 ## What's new in 2.0.5
 
 - **Catalog versus disk.** The Catalog page shows *Advertised but not synced*:
@@ -46,7 +56,7 @@ sha256sum -c airlock-depot-<version>.ova.sha256
 
 ## Also new since 2.0.0
 
-The 2.0.5 OVA replaces 2.0.4, which is withdrawn. Since 2.0.0 the appliance
+The 2.0.6 OVA is current (2.0.4 is withdrawn). Since 2.0.0 the appliance
 gained:
 
 - **In-place service patching.** Settings → Appliance updates takes a signed
@@ -77,7 +87,7 @@ gained:
   built with a current Go toolchain.
 
 Appliances deployed from an earlier OVA keep working; redeploy from the
-2.0.5 OVA to get the patching mechanism.
+2.0.6 OVA to get the patching mechanism.
 
 ## Deploying
 
