@@ -27,9 +27,27 @@ Each OVA ships with `.sha256` and `.sha512` files attached to the release:
 sha256sum -c airlock-depot-<version>.ova.sha256
 ```
 
-## What's new in 2.0.4
+## What's new in 2.0.5
 
-Since 2.0.0 the appliance gained:
+- **Catalog versus disk.** The Catalog page shows *Advertised but not synced*:
+  every version the depot's product catalog lists whose files are not on
+  disk, with the missing file names. The Consumers page lists the paths each
+  consumer asked for and did not get. Background: the catalog is refreshed by
+  every sync and lists every Broadcom release, while the depot holds only
+  what was synced; a consumer such as SDDC Manager trusts the catalog and
+  reports download errors for releases the depot never had.
+- **Publish only synced releases** (Settings → Depot catalog, administrators).
+  When on, the depot serves a copy of the catalog trimmed to the versions
+  whose files are all on disk, re-applied after every sync, so consumers only
+  ever see what the depot can deliver. Turning it off restores the upstream
+  catalog exactly.
+- **SAMPLE** is a selectable classification level on every role; it renders as
+  the grey placeholder band and can never pass for a marking.
+
+## Also new since 2.0.0
+
+The 2.0.5 OVA replaces 2.0.4, which is withdrawn. Since 2.0.0 the appliance
+gained:
 
 - **In-place service patching.** Settings → Appliance updates takes a signed
   service patch, verifies it against the key built into the appliance,
@@ -59,7 +77,7 @@ Since 2.0.0 the appliance gained:
   built with a current Go toolchain.
 
 Appliances deployed from an earlier OVA keep working; redeploy from the
-2.0.4 OVA to get the patching mechanism.
+2.0.5 OVA to get the patching mechanism.
 
 ## Deploying
 
