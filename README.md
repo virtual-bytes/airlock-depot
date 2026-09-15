@@ -27,6 +27,15 @@ Each OVA ships with `.sha256` and `.sha512` files attached to the release:
 sha256sum -c airlock-depot-<version>.ova.sha256
 ```
 
+## What's new in 2.0.7
+
+- **First boot on VMware Workstation, Fusion and hand-built VMs.** Those
+  platforms cannot deliver vApp properties, so earlier releases stopped at
+  "FIRST BOOT FAILED" with the console account locked. The appliance now
+  comes up reachable with a one-time console password and a first-boot
+  wizard, or reads its settings from `guestinfo.airlock.*` lines in the
+  `.vmx`. vSphere deployments are unchanged. See *Deploying* below.
+
 ## What's new in 2.0.6
 
 - **Catalog versus disk.** The Catalog page shows *Advertised but not synced*:
@@ -53,7 +62,7 @@ sha256sum -c airlock-depot-<version>.ova.sha256
 
 ## Also new since 2.0.0
 
-The 2.0.6 OVA is current (2.0.4 is withdrawn). Since 2.0.0 the appliance
+The 2.0.7 OVA is current (2.0.4 is withdrawn). Since 2.0.0 the appliance
 gained:
 
 - **In-place service patching.** Settings → Appliance updates takes a signed
@@ -84,7 +93,7 @@ gained:
   built with a current Go toolchain.
 
 Appliances deployed from an earlier OVA keep working; redeploy from the
-2.0.6 OVA to get the patching mechanism.
+2.0.7 OVA to get the patching mechanism.
 
 ## Deploying
 
@@ -93,6 +102,44 @@ fill in the vApp properties (FQDN, IP/CIDR, gateway, DNS, NTP, admin
 password). The role is fixed by the configuration you pick — first boot
 stamps it, configures the network, and generates keys and TLS. The
 appliance UI walks you through the rest via Express Setup.
+
+### VMware Workstation, Fusion, or a hand-built VM
+
+vCenter and ESXi hand the appliance its settings through the OVF environment.
+Workstation and Fusion do not, so an appliance deployed there (2.0.7 and
+later) comes up **unconfigured but reachable**: it keeps a DHCP address, and
+the console shows a one-time password for the `admin` account together with
+two ways to finish:
+
+1. **Console wizard.** Log in on the VM console as `admin` with the one-time
+   password and run
+
+   ```
+   sudo /opt/airlock/firstboot/airlock-firstboot.sh --wizard
+   ```
+
+   It asks for the role (connected or dark site), FQDN, IP address with
+   prefix, gateway, DNS, NTP, an optional proxy, and a new admin password,
+   then completes first boot exactly as a vCenter deployment would.
+
+2. **Settings in the `.vmx`.** Before the first power-on, add lines such as
+
+   ```
+   guestinfo.airlock.role = "connected"
+   guestinfo.airlock.fqdn = "airlock.example.com"
+   guestinfo.airlock.ip_cidr = "10.40.8.21/24"
+   guestinfo.airlock.gateway = "10.40.8.1"
+   guestinfo.airlock.dns = "10.40.8.53"
+   guestinfo.airlock.ntp = "pool.ntp.org"
+   guestinfo.airlock.admin_password = "<14+ characters>"
+   ```
+
+   (`guestinfo.airlock.proxy` is optional and connected-only.) First boot
+   reads them the same way it reads vApp properties.
+
+The role is fixed once set; changing it means redeploying. Deployments
+before 2.0.7 stop at "FIRST BOOT FAILED: no OVF environment" on these
+platforms and cannot be entered; redeploy from a current OVA.
 
 ## Disclaimer
 
