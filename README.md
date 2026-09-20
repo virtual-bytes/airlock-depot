@@ -18,14 +18,56 @@ Grab the OVAs from the **[Releases](../../releases)** page:
 - `airlock-depot-<version>-darksite.ova` — restricted single-configuration
   descriptor for separately delivered high-side media. Same disk bits;
   only the descriptor differs.
+- `airlock-patch-<version>.tar.gz` — signed **service patch** for appliances
+  already deployed from a 2.0.1 or later OVA (Settings → Appliance updates).
+- `airlock-os-<version>.tar.gz` — signed **OS update bundle** (2.1.0 and
+  later): brings the Photon packages of a deployed appliance to the level of
+  the current OVA. Apply the service patch first, then this, then reboot.
 
 ### Verify before deploying
 
-Each OVA ships with `.sha256` and `.sha512` files attached to the release:
+Each OVA ships with `.sha256` and `.sha512` files and a detached GPG
+signature (`.sig`, release key `18B3 C542 A907 10DD 9CFA 3880 6BBD 4917
+46B3 3CE0`) attached to the release:
 
 ```
 sha256sum -c airlock-depot-<version>.ova.sha256
 ```
+
+The service patch and the OS bundle are verified by the appliance itself
+against the signing key built into the image before anything is installed.
+
+## What's new in 2.1.0 — platform refresh
+
+- **Current Photon OS 5 patch level.** The image is built from the Photon 5
+  update repository instead of the 5.0 GA ISO level: kernel 6.12, systemd
+  257, GRUB 2.12, current OpenSSL, OpenSSH, curl and about 140 more
+  packages. The build reboots into the new kernel before the appliance is
+  assembled, so what ships is what was booted. The image's SBOM scans with
+  **zero Critical and zero High findings** (2.0.x images carried the 2023
+  Photon GA packages, documented in their release notes).
+- **OS update bundle for deployed appliances.** Settings → Appliance updates
+  gains an *Operating system* section. Upload `airlock-os-<version>.tar.gz`,
+  verify, apply, reboot: the appliance installs only the packages it still
+  needs, proves the new kernel is bootable, and after the reboot confirms it
+  is running it. No redeploy, no re-download of the depot. There is no
+  rollback for OS packages, so take a VM snapshot first; the appliance says
+  so before applying.
+- **Bootloader password.** The GRUB menu on the VM console is protected.
+  A fresh appliance uses the **admin password chosen at deployment**; it can
+  be changed later from Settings → Bootloader password, which is also where
+  an appliance upgraded with the OS bundle gets one. Normal boots never ask.
+- **Reproducible package set.** The build fails if the sealed package list
+  differs from the committed lock, so a rebuilt image is the image that was
+  scanned.
+- The API documentation (`/api/v1/docs/`) now covers API tokens and bearer
+  authentication, the catalog gap report, vCenter content-library access and
+  the workload-artifact endpoints.
+
+**Upgrading a deployed 2.0.x appliance to 2.1.0:** apply
+`airlock-patch-2.1.0.tar.gz`, take a VM snapshot, apply
+`airlock-os-2.1.0.tar.gz`, reboot, then set a bootloader password from
+Settings. Appliances that stay on 2.0.x keep working.
 
 ## What's new in 2.0.7
 
@@ -62,7 +104,7 @@ sha256sum -c airlock-depot-<version>.ova.sha256
 
 ## Also new since 2.0.0
 
-The 2.0.7 OVA is current (2.0.4 is withdrawn). Since 2.0.0 the appliance
+The 2.1.0 OVA is current (2.0.4 is withdrawn). Since 2.0.0 the appliance
 gained:
 
 - **In-place service patching.** Settings → Appliance updates takes a signed
@@ -71,7 +113,7 @@ gained:
   health-checks it, rolling back on its own if the new version does not come
   up. Roll back is one button; every step is audited. The depot on `/data`,
   the database, configuration and TLS material are never touched. Photon OS
-  packages are not covered; those arrive with a new OVA.
+  packages arrive separately as an OS update bundle (2.1.0 and later).
 - **GUI accounts.** Administrators add, remove and reset `admin` or
   `operator` accounts from Settings. Operators can do everything except
   account management, appliance updates and the classification banner, and
@@ -92,16 +134,18 @@ gained:
   image (Photon packages plus the API's Go modules) and scans it; the API is
   built with a current Go toolchain.
 
-Appliances deployed from an earlier OVA keep working; redeploy from the
-2.0.7 OVA to get the patching mechanism.
+Appliances deployed from an earlier OVA keep working; apply the service
+patch and the OS bundle to reach 2.1.0 in place, or redeploy from the 2.1.0
+OVA.
 
 ## Deploying
 
 Deploy the OVA in vCenter, choose the deployment configuration (role), and
 fill in the vApp properties (FQDN, IP/CIDR, gateway, DNS, NTP, admin
 password). The role is fixed by the configuration you pick — first boot
-stamps it, configures the network, and generates keys and TLS. The
-appliance UI walks you through the rest via Express Setup.
+stamps it, configures the network, generates keys and TLS, and (2.1.0 and
+later) sets the admin password as the bootloader password. The appliance UI
+walks you through the rest via Express Setup.
 
 ### VMware Workstation, Fusion, or a hand-built VM
 
