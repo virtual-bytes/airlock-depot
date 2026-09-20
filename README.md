@@ -18,11 +18,9 @@ Grab the OVAs from the **[Releases](../../releases)** page:
 - `airlock-depot-<version>-darksite.ova` — restricted single-configuration
   descriptor for separately delivered high-side media. Same disk bits;
   only the descriptor differs.
-- `airlock-patch-<version>.tar.gz` — signed **service patch** for appliances
-  already deployed from a 2.0.1 or later OVA (Settings → Appliance updates).
-- `airlock-os-<version>.tar.gz` — signed **OS update bundle** (2.1.0 and
-  later): brings the Photon packages of a deployed appliance to the level of
-  the current OVA. Apply the service patch first, then this, then reboot.
+
+Only OVAs are distributed here. Signed service patches and OS update
+bundles for appliances already deployed are delivered separately.
 
 ### Verify before deploying
 
@@ -34,9 +32,6 @@ signature (`.sig`, release key `18B3 C542 A907 10DD 9CFA 3880 6BBD 4917
 sha256sum -c airlock-depot-<version>.ova.sha256
 ```
 
-The service patch and the OS bundle are verified by the appliance itself
-against the signing key built into the image before anything is installed.
-
 ## What's new in 2.1.0 — platform refresh
 
 - **Current Photon OS 5 patch level.** The image is built from the Photon 5
@@ -47,7 +42,7 @@ against the signing key built into the image before anything is installed.
   **zero Critical and zero High findings** (2.0.x images carried the 2023
   Photon GA packages, documented in their release notes).
 - **OS update bundle for deployed appliances.** Settings → Appliance updates
-  gains an *Operating system* section. Upload `airlock-os-<version>.tar.gz`,
+  gains an *Operating system* section. Upload a signed OS update bundle,
   verify, apply, reboot: the appliance installs only the packages it still
   needs, proves the new kernel is bootable, and after the reboot confirms it
   is running it. No redeploy, no re-download of the depot. There is no
@@ -64,10 +59,10 @@ against the signing key built into the image before anything is installed.
   authentication, the catalog gap report, vCenter content-library access and
   the workload-artifact endpoints.
 
-**Upgrading a deployed 2.0.x appliance to 2.1.0:** apply
-`airlock-patch-2.1.0.tar.gz`, take a VM snapshot, apply
-`airlock-os-2.1.0.tar.gz`, reboot, then set a bootloader password from
-Settings. Appliances that stay on 2.0.x keep working.
+**Upgrading a deployed 2.0.x appliance to 2.1.0:** apply the 2.1.0 service
+patch, take a VM snapshot, apply the 2.1.0 OS update bundle, reboot, then
+set a bootloader password from Settings. Appliances that stay on 2.0.x keep
+working.
 
 ## What's new in 2.0.7
 
