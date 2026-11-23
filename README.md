@@ -25,12 +25,18 @@ bundles for appliances already deployed are delivered separately.
 ### Verify before deploying
 
 Each OVA ships with `.sha256` and `.sha512` files and a detached GPG
-signature (`.sig`, release key `18B3 C542 A907 10DD 9CFA 3880 6BBD 4917
-46B3 3CE0`) attached to the release:
+signature (`.sig`) attached to the release. The release public key is in
+[`signing/airlock-release-signing-6BBD491746B33CE0.asc`](signing/airlock-release-signing-6BBD491746B33CE0.asc);
+its fingerprint is `18B3 C542 A907 10DD 9CFA 3880 6BBD 4917 46B3 3CE0`.
 
 ```
 sha256sum -c airlock-depot-<version>.ova.sha256
+gpg --import airlock-release-signing-6BBD491746B33CE0.asc
+gpg --verify airlock-depot-<version>.ova.sig airlock-depot-<version>.ova
 ```
+
+`gpg --verify` must report a good signature from *Airlock Depot Release
+Signing (Virtual Bytes)* with the fingerprint above.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/dashboard-dark.png">
