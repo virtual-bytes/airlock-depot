@@ -223,6 +223,14 @@ The role is fixed once set; changing it means redeploying. Deployments
 before 2.0.7 stop at "FIRST BOOT FAILED: no OVF environment" on these
 platforms and cannot be entered; redeploy from a current OVA.
 
+## Questions and problems
+
+Use [GitHub Issues](../../issues) on this repository; it is the only contact
+channel for Airlock Depot. Include the appliance version (Settings → Appliance
+updates) and, for a failed sync, the job log from Sync jobs. Never post
+passwords, activation codes or depot credentials in an issue. Replies are
+best effort (see the disclaimer below).
+
 ## Disclaimer
 
 Airlock Depot is provided by Virtual Bytes **AS IS**, without warranty of
