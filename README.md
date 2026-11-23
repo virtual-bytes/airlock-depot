@@ -32,6 +32,49 @@ signature (`.sig`, release key `18B3 C542 A907 10DD 9CFA 3880 6BBD 4917
 sha256sum -c airlock-depot-<version>.ova.sha256
 ```
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/dashboard-dark.png">
+  <img alt="Airlock Depot dashboard: depot health, storage, last sync, consumers, alerts and depot verification" src="docs/dashboard-light.png">
+</picture>
+
+## What's new in 2.1.1 — security release
+
+- **Security fixes.** A November 2026 review of the API, the root-side
+  helpers and the GUI found three ways the API's service account could become
+  root; all are fixed, along with the rest of the findings. Signed patches
+  older than the running version are refused, the database password, TLS key
+  and probe settings are readable only by the account that needs them, a
+  stranger can no longer keep `admin` locked out with failed sign-ins, the
+  API runs in a tighter systemd sandbox, and version details are hidden
+  before sign-in. **Upgrade every deployed appliance.**
+- **Follows new VCF releases on its own.** A sync release of `9` means the
+  newest VCF 9 release: each run asks the depot which releases exist, so
+  9.1.1, 9.2 and later arrive without an appliance update. `9.1` follows the
+  newest 9.1.x (it stayed on 9.1.0 before), `9.1.1` is one release,
+  `9.1.1.0200` one build. Every job log names the release it resolved to.
+- **Scheduled syncs run.** Each automatic subscription runs once per window
+  (Express Setup sets 01:00–05:00, appliance time), one job at a time.
+- **Choose what to download.** *Run sync now* lists upgrade bundles, install
+  binaries, the ESX patch store and workload artifacts in plain words, and
+  can list individual binaries and workload artifacts (Supervisor, Kubernetes
+  releases, VKS packages, every VCF service, VCF CLI, DSM) from the upstream
+  depot to pick from.
+- **VCF Download Tool updates from the depot.** Upgrade syncs download the
+  tool itself; the tool page lists those copies and stages one in a click. It
+  is accepted only if the product catalog's signature verifies with the
+  active tool's VMware signing certificate and the archive matches the
+  catalog's checksum.
+- **Redesigned interface** with light and dark themes (follows the browser,
+  switchable from the top bar), clearer status marks and a phone layout.
+- **Platform refresh.** Photon OS 5 at the 23 November 2026 patch level:
+  kernel 6.12.116, OpenSSL 3.5.9, OpenSSH 10.6p2, curl 8.23.0, nginx 1.30.6,
+  PostgreSQL 16.16, ClamAV 1.4.7. The image's SBOM scans with **zero Critical
+  and zero High findings**.
+
+**Upgrading a deployed 2.0.x or 2.1.0 appliance to 2.1.1:** apply the 2.1.1
+service patch (it runs a one-time hardening step), take a VM snapshot, apply
+the 2.1.1 OS update bundle, reboot.
+
 ## What's new in 2.1.0 — platform refresh
 
 - **Current Photon OS 5 patch level.** The image is built from the Photon 5
@@ -99,7 +142,7 @@ working.
 
 ## Also new since 2.0.0
 
-The 2.1.0 OVA is current (2.0.4 is withdrawn). Since 2.0.0 the appliance
+The 2.1.1 OVA is current (2.0.4 is withdrawn). Since 2.0.0 the appliance
 gained:
 
 - **In-place service patching.** Settings → Appliance updates takes a signed
@@ -130,7 +173,7 @@ gained:
   built with a current Go toolchain.
 
 Appliances deployed from an earlier OVA keep working; apply the service
-patch and the OS bundle to reach 2.1.0 in place, or redeploy from the 2.1.0
+patch and the OS bundle to reach 2.1.1 in place, or redeploy from the 2.1.1
 OVA.
 
 ## Deploying
